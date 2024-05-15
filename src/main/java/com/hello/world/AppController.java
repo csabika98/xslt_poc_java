@@ -42,7 +42,7 @@ public class AppController {
         xmlBuilder.append("<id>forms</id>");
         xmlBuilder.append("<country>us</country>");
         xmlBuilder.append("<language>en</language>");
-        xmlBuilder.append("<attribute-lines xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:java=\"http://java.sun.com\" xsi:type=\"java.PrintAttributeLineTemplateViewModel\">");
+        xmlBuilder.append("<text-field-lines xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:java=\"http://java.sun.com\" xsi:type=\"java.PrintAttributeLineTemplateViewModel\">");
 
         for (int i = 0; i < fields.size(); i++) {
             String field = fields.get(i);
@@ -59,13 +59,14 @@ public class AppController {
             xmlBuilder.append("<data-type>STRING</data-type>");
             xmlBuilder.append("<value-text>").append(field).append("</value-text>");
             xmlBuilder.append("<value>").append(field).append("</value>");
-            xmlBuilder.append("<id>").append(i + 1).append("</id>");
+            xmlBuilder.append("<id>").append("text_field_").append(i + 1).append("</id>");
             xmlBuilder.append("</").append(column).append(">");
         }
 
-        xmlBuilder.append("</attribute-lines>");
+        xmlBuilder.append("</text-field-lines>");
         xmlBuilder.append("</print-template-view-model>");
         String xmlContent = xmlBuilder.toString();
+        System.out.println(xmlContent);
 
         // Convert XML string to InputStream
         try (InputStream xmlStream = new ByteArrayInputStream(xmlContent.getBytes());

@@ -2,45 +2,64 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Dynamic Form</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         function addField() {
             const container = document.getElementById('fields');
             const div = document.createElement('div');
+            div.classList.add('form-row', 'mb-3');
+
+            const inputDiv = document.createElement('div');
+            inputDiv.classList.add('col');
 
             const input = document.createElement('input');
             input.type = 'text';
             input.name = 'fields';
             input.placeholder = 'Enter value';
-            div.appendChild(input);
+            input.classList.add('form-control');
+            input.required = true;
+            inputDiv.appendChild(input);
+
+            const sortOrderDiv = document.createElement('div');
+            sortOrderDiv.classList.add('col');
 
             const sortOrder = document.createElement('input');
             sortOrder.type = 'number';
             sortOrder.name = 'sortOrders';
             sortOrder.placeholder = 'Enter sort order';
-            div.appendChild(sortOrder);
+            sortOrder.classList.add('form-control');
+            sortOrder.required = true;
+            sortOrderDiv.appendChild(sortOrder);
 
+            div.appendChild(inputDiv);
+            div.appendChild(sortOrderDiv);
             container.appendChild(div);
-            container.appendChild(document.createElement('br'));
         }
     </script>
 </head>
 <body>
-<h1>Dynamic Form</h1>
-<form action="/generate-pdf" method="post" enctype="multipart/form-data">
-    <div id="fields">
-        <div>
-            <input type="text" name="fields" placeholder="Enter value" required>
-            <input type="number" name="sortOrders" placeholder="Enter sort order" required>
+<div class="container mt-5">
+    <h1 class="mb-4">Dynamic Form</h1>
+    <form action="/generate-pdf" method="post" enctype="multipart/form-data">
+        <div id="fields">
+            <div class="form-row mb-3">
+                <div class="col">
+                    <input type="text" name="fields" placeholder="Enter value" class="form-control" required>
+                </div>
+                <div class="col">
+                    <input type="number" name="sortOrders" placeholder="Enter sort order" class="form-control" required>
+                </div>
+            </div>
         </div>
-        <br>
-    </div>
-    <button type="button" onclick="addField()">Add Field</button><br><br>
-    <input type="file" name="xslFile" accept=".xsl" required><br><br>
-    <button type="submit">Generate PDF</button>
-</form>
+        <button type="button" class="btn btn-primary mb-3" onclick="addField()">Add Field</button><br>
+        <div class="form-group">
+            <input type="file" name="xslFile" accept=".xsl" class="form-control-file" required>
+        </div>
+        <button type="submit" class="btn btn-success">Generate PDF</button>
+    </form>
+</div>
 </body>
 </html>
-
-
-
-
