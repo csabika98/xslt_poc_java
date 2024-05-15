@@ -36,6 +36,7 @@
 
                     </fo:block>
                     <fo:block>
+                        Single value reference:
                         <xsl:value-of select="/print-template-view-model/text-field-lines/*[id='text_field_1']/value-text"/>
                     </fo:block>
                 </fo:flow>
