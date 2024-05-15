@@ -1,8 +1,8 @@
 ﻿## Screenshots
 
 - **Dynamic Forms**: You can enter any value into the fields, then specify the Sort Order (integer, 1 means the first element).
-  ![1.png](.screenshots/1.png)
-  ![2.png](.screenshots/2.png)
+  ![1.png](/screenshots/1.png)
+  ![2.png](/screenshots/2.png)
 
 - **Use the provided XSL template file**: Any other XSLT template can be accepted, just use:
 ```xml
