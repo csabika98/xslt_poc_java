@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dynamic Form</title>
+    <script>
+        function addField() {
+            const container = document.getElementById('fields');
+            const div = document.createElement('div');
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'fields';
+            input.placeholder = 'Enter value';
+            div.appendChild(input);
+
+            const sortOrder = document.createElement('input');
+            sortOrder.type = 'number';
+            sortOrder.name = 'sortOrders';
+            sortOrder.placeholder = 'Enter sort order';
+            div.appendChild(sortOrder);
+
+            container.appendChild(div);
+            container.appendChild(document.createElement('br'));
+        }
+    </script>
+</head>
+<body>
+<h1>Dynamic Form</h1>
+<form action="/generate-pdf" method="post" enctype="multipart/form-data">
+    <div id="fields">
+        <div>
+            <input type="text" name="fields" placeholder="Enter value" required>
+            <input type="number" name="sortOrders" placeholder="Enter sort order" required>
+        </div>
+        <br>
+    </div>
+    <button type="button" onclick="addField()">Add Field</button><br><br>
+    <input type="file" name="xslFile" accept=".xsl" required><br><br>
+    <button type="submit">Generate PDF</button>
+</form>
+</body>
+</html>
+
+
+
+

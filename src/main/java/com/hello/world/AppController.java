@@ -1,43 +1,80 @@
 package com.hello.world;
-import jakarta.servlet.http.HttpServletResponse;
+
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-
+import jakarta.servlet.http.HttpServletResponse;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
-class AppController {
+public class AppController {
     @GetMapping("/")
     public String home() {
-        return "index";
+        return "form";
     }
 
-    @GetMapping("/generate-pdf")
-    public void generatePdf(HttpServletResponse response) throws Exception {
-        // Set up FopFactory and TransformerFactory
-        FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
-        TransformerFactory transformerFactory = new net.sf.saxon.TransformerFactoryImpl();
+    @PostMapping("/generate-pdf")
+    public void generatePdf(
+            @RequestParam("fields") List<String> fields,
+            @RequestParam("sortOrders") List<Optional<Integer>> sortOrders,
+            @RequestParam("xslFile") MultipartFile xslFile,
+            HttpServletResponse response
+    ) throws Exception {
+        // Generate XML from form fields
+        StringBuilder xmlBuilder = new StringBuilder();
+        xmlBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        xmlBuilder.append("<print-template-view-model>");
+        xmlBuilder.append("<id>forms</id>");
+        xmlBuilder.append("<country>us</country>");
+        xmlBuilder.append("<language>en</language>");
+        xmlBuilder.append("<attribute-lines xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:java=\"http://java.sun.com\" xsi:type=\"java.PrintAttributeLineTemplateViewModel\">");
 
-        // Load XSLT and XML files
-        ClassPathResource xsltFile = new ClassPathResource("template.xsl");
-        ClassPathResource xmlFile = new ClassPathResource("data.xml");
+        for (int i = 0; i < fields.size(); i++) {
+            String field = fields.get(i);
+            Optional<Integer> sortOrderOpt = sortOrders.get(i);
 
-        // Setup output stream
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+            if (field == null || field.isEmpty() || sortOrderOpt.isEmpty()) {
+                continue; // Skip empty fields or sort orders
+            }
 
-        try (InputStream xsltStream = xsltFile.getInputStream();
-             InputStream xmlStream = xmlFile.getInputStream()) {
+            int sortOrder = sortOrderOpt.get();
+            String column = sortOrder % 2 == 0 ? "right-column-attribute" : "left-column-attribute";
+
+            xmlBuilder.append("<").append(column).append(" sort-order=\"").append(sortOrder).append("\">");
+            xmlBuilder.append("<data-type>STRING</data-type>");
+            xmlBuilder.append("<value-text>").append(field).append("</value-text>");
+            xmlBuilder.append("<value>").append(field).append("</value>");
+            xmlBuilder.append("<id>").append(i + 1).append("</id>");
+            xmlBuilder.append("</").append(column).append(">");
+        }
+
+        xmlBuilder.append("</attribute-lines>");
+        xmlBuilder.append("</print-template-view-model>");
+        String xmlContent = xmlBuilder.toString();
+
+        // Convert XML string to InputStream
+        try (InputStream xmlStream = new ByteArrayInputStream(xmlContent.getBytes());
+             InputStream xsltStream = xslFile.getInputStream();
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
+            // Setup FopFactory and TransformerFactory
+            FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
+            TransformerFactory transformerFactory = new net.sf.saxon.TransformerFactoryImpl();
 
             // Setup FOP
             Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
@@ -47,11 +84,12 @@ class AppController {
 
             // Perform transformation and FOP processing
             transformer.transform(new StreamSource(xmlStream), new SAXResult(fop.getDefaultHandler()));
-        }
 
-        // Send the PDF as response
-        response.setContentType("application/pdf");
-        response.setContentLength(out.size());
-        response.getOutputStream().write(out.toByteArray());
+            // Send the PDF as response
+            response.setContentType("application/pdf");
+            response.setContentLength(out.size());
+            response.getOutputStream().write(out.toByteArray());
+        }
     }
 }
+
