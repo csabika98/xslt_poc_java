@@ -28,12 +28,12 @@ Example template can be found:
 ExampleXSLTemplate/test.xsl
 ```
 
-![8.png](\screenshots\8.png)
+![8.png](/screenshots/8.png)
 
 For each to get back every values you enter the system.
-![10.png](\screenshots\10.png)
-![11.png](\screenshots\11.png)
-![12.png](\screenshots\12.png)
+![10.png](/screenshots/10.png)
+![11.png](/screenshots/11.png)
+![12.png](/screenshots/12.png)
 
 
 ## XSLT 2.0+ processor with Apache FOP (POC)
