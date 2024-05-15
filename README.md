@@ -3,6 +3,10 @@
 - **Dynamic Forms**: You can enter any value into the fields, then specify the Sort Order (integer, 1 means the first element).
   ![1.png](/screenshots/1.png)
   ![2.png](/screenshots/2.png)
+  ![6.png](/screenshots/6.png)
+
+  ![15.png](/screenshots/15.png)
+  ![12.png](/screenshots/12.png)
 
 - **Use the provided XSL template file**: Any other XSLT template can be accepted, just use:
 ```xml
@@ -28,12 +32,15 @@ Example template can be found:
 ExampleXSLTemplate/test.xsl
 ```
 
-![8.png](/screenshots/8.png)
+
+
+Single value reference
+![10.png](/screenshots/13.png)
 
 For each to get back every values you enter the system.
-![10.png](/screenshots/10.png)
-![11.png](/screenshots/11.png)
-![12.png](/screenshots/12.png)
+![11.png](/screenshots/14.png)
+
+
 
 
 ## XSLT 2.0+ processor with Apache FOP (POC)
